@@ -19,7 +19,7 @@
 // }: {
 //   className?: string;
 //   children?: React.ReactNode;
-// }) => {
+// }) => {   
 //   return (
 //     <div
 //       className={cn(
@@ -201,7 +201,7 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IoCopyOutline } from "react-icons/io5";
 import dynamic from "next/dynamic";
 
@@ -209,9 +209,10 @@ import { cn } from "@/lib/utils";
 import { BackgroundGradientAnimation } from "./GradientBg";
 import GridGlobe from "./GridGlobe";
 import MagicButton from "../MagicButton";
+import animationData from "@/data/confetti.json";
 
 // Dynamically import Lottie with SSR disabled
-const Lottie = dynamic(() => import("react-lottie"), {
+const Lottie = dynamic(() => import("lottie-react"), {
   ssr: false,
 });
 
@@ -257,23 +258,6 @@ export const BentoGridItem = ({
   const rightLists = ["VueJS", "NuxtJS", "GraphQL"];
 
   const [copied, setCopied] = useState(false);
-  const [animationData, setAnimationData] = useState<any>(null);
-
-  // Load animation data only on client side
-  useEffect(() => {
-    import("@/data/confetti.json").then((data) => {
-      setAnimationData(data.default);
-    });
-  }, []);
-
-  const defaultOptions = {
-    loop: copied,
-    autoplay: copied,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
 
   const handleCopy = () => {
     const text = "hsu@jsmastery.pro";
@@ -374,9 +358,12 @@ export const BentoGridItem = ({
                   copied ? "block" : "block"
                 }`}
               >
-                {animationData && (
-                  <Lottie options={defaultOptions} height={200} width={400} />
-                )}
+                <Lottie
+                  animationData={animationData}
+                  loop={copied}
+                  autoplay={copied}
+                  style={{ height: 200, width: 400 }}
+                />
               </div>
 
               <MagicButton
